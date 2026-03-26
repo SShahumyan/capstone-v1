@@ -40,3 +40,11 @@ dump/
 
 # Node (if you later add frontend)
 node_modules/
+
+temp_scripts/
+
+markdown_files/
+
+data/
+
+data_test/

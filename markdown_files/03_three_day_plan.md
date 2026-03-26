@@ -102,6 +102,8 @@ print(f"Retrieved: {found['text']}")
 
 - [ ] Run it. Go to MongoDB Atlas UI → Browse Collections → confirm the document is there.
 
+Learn Vercel
+
 **Day 1 done ✓** — You have the full pipeline plumbing working.
 
 ---

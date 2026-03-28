@@ -1,0 +1,38 @@
+"""
+This files takes test queries, and then performs retrieval from db.
+Retrieval is done with all sensible permutations of db and query embedding model.
+All results are stored in a .json file in evaluation folder, which can later be used to 
+evaluate the quality of the retrieval based on the models used for document and query embeddings. 
+"""
+from search import search
+import json
+
+PERMUTATIONS = [
+    {"collection": "chunks",    "model": "voyage-4-large"},
+    {"collection": "chunks",    "model": "voyage-4"},
+    {"collection": "chunks",    "model": "voyage-4-lite"},
+    {"collection": "chunks_v4", "model": "voyage-4"},
+    {"collection": "chunks_v4", "model": "voyage-4-lite"},
+    {"collection": "chunks_v4_lite", "model": "voyage-4-lite"},
+]
+
+TEST_QUERIES = [
+    "Հայաստանի մայրաքաղաքը",
+    "Արարատ լեռը",
+    "Ո՞վ է հռոմի պապը",
+    "Հայոց ամենահզոր տագավորը"
+    # add more queries here
+]
+
+all_results = []
+
+for query in TEST_QUERIES:
+    for p in PERMUTATIONS:
+        result = search(query, collection=p["collection"], model=p["model"])
+        all_results.append(result)
+        print(f"✓ query='{query}' | collection={p['collection']} | model={p['model']}")
+
+with open("evaluation/raw_results.json", "w", encoding="utf-8") as f:
+    json.dump(all_results, f, ensure_ascii=False, indent=2)
+
+print(f"\nDone — {len(all_results)} results saved to evaluation/raw_results.json")

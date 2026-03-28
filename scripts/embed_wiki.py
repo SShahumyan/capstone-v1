@@ -1,6 +1,6 @@
 """
 this is a code responsible for adding vectors to mongodb.
-It adds contents from data/armenian_chunks.json currently
+It adds contents from data/armenian_chunks.json currently.
 """
 import voyageai
 from pymongo import MongoClient
@@ -14,7 +14,7 @@ load_dotenv()
 
 vo = voyageai.Client(api_key=os.getenv("VOYAGE_API_KEY"))
 client = MongoClient(os.getenv("MONGODB_URI"))
-collection = client["armenian_search"]["chunks"]
+collection = client["armenian_search"]["chunks_v4_lite"]
 
 # Clear previous data
 # collection.delete_many({})
@@ -32,7 +32,7 @@ for i in tqdm(range(0, len(chunks), BATCH_SIZE)):
     batch = chunks[i:i + BATCH_SIZE]
     texts = [item["text"] for item in batch]
 
-    result = vo.embed(texts, model="voyage-4-large", input_type="document")
+    result = vo.embed(texts, model="voyage-4-lite", input_type="document")
 
     for j, (item, vector) in enumerate(zip(batch, result.embeddings)):
         docs_to_insert.append({

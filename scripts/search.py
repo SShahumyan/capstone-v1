@@ -79,6 +79,8 @@ def search(query: str, collection: str = "chunks", model: str = "voyage-4-large"
             "$project": {
                 "text": 1,
                 "article": 1,
+                "articleID": 1,
+                "chunkID": 1,
                 "score": {"$meta": "vectorSearchScore"}
             }
         }
@@ -88,10 +90,12 @@ def search(query: str, collection: str = "chunks", model: str = "voyage-4-large"
     for r in raw_results:
         results.append({
             "rank":    len(results) + 1,
-            "text":    r["text"],
+            #"text":    r["text"],
             "article": r.get("article", ""),
             "score":   r["score"],
-            "_id":     str(r["_id"])
+            "_id":     str(r["_id"]),
+            "articleID": r["articleID"],
+            "chunkID": r["chunkID"]
         })
 
     return {

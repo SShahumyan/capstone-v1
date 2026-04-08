@@ -16,21 +16,27 @@ PERMUTATIONS = [
     {"collection": "chunks_v4_lite", "model": "voyage-4-lite"},
 ]
 
-TEST_QUERIES = [
-    "Հայաստանի մայրաքաղաքը",
-    "Արարատ լեռը",
-    "Ո՞վ է հռոմի պապը",
-    "Հայոց ամենահզոր տագավորը"
-    # add more queries here
-]
+with open("evaluation/ground_truth.json", "r", encoding="utf-8") as f:
+    ground_truth = json.load(f)
+
+#TEST_QUERIES = [entry["question"] for entry in ground_truth]
 
 all_results = []
 
-for query in TEST_QUERIES:
+for gt in ground_truth:
     for p in PERMUTATIONS:
-        result = search(query, collection=p["collection"], model=p["model"])
-        all_results.append(result)
-        print(f"✓ query='{query}' | collection={p['collection']} | model={p['model']}")
+        result = search(gt["question"], collection=p["collection"], model=p["model"])
+        #all_results.append(result)
+        all_results.append({
+            "question":          gt["question"],
+            "expected_articleID": gt["articleID"],
+            "expected_chunkID":   gt["chunkID"],
+            "expected_article":   gt["article"],
+            "collection":         p["collection"],
+            "embedding_model":    p["model"],
+            "results":            result["results"]
+        })
+        print(f"✓ query='{gt['question']}' | collection={p['collection']} | model={p['model']}")
 
 with open("evaluation/raw_results.json", "w", encoding="utf-8") as f:
     json.dump(all_results, f, ensure_ascii=False, indent=2)

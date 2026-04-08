@@ -33,7 +33,7 @@ def generate_question(chunk: str, article: str, chunk_id: int, article_id: int) 
 
     #response = model.generate_content(prompt)
     response = client.models.generate_content(
-    model="gemini-2.5-flash",
+    model="gemini-2.0-flash",
     contents=prompt)
     raw = response.text.strip()
 

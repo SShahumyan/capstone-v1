@@ -13,7 +13,8 @@ client = MongoClient(os.getenv("MONGODB_URI"))
 collection = client["armenian_search"]["chunks"]
 
 # Pick 50 random articleIDs
-sampled_ids = random.sample(range(1, 2001), 50)
+# Now pick 100 more articles
+sampled_ids = random.sample(range(1, 2001), 100)
 
 # For each article pick a random chunkID and fetch it
 sample_docs = []
@@ -30,9 +31,11 @@ for article_id in sampled_ids:
     if doc:
         sample_docs.append(doc)
 
-print(f"Found {len(sample_docs)} chunks from 50 sampled articles")
+print(f"Found {len(sample_docs)} chunks from 100 sampled articles")
 
-ground_truth = []
+with open("evaluation/ground_truth.json", "r", encoding="utf-8") as f:
+    ground_truth = json.load(f)
+#ground_truth = []
 failed = []
 
 for doc in tqdm(sample_docs):
@@ -44,7 +47,7 @@ for doc in tqdm(sample_docs):
             article_id=doc["articleID"]
         )
         ground_truth.append(entry)
-        time.sleep(0.5)
+        time.sleep(2)
     except Exception as e:
         print(f"Failed for article '{doc['article']}': {e}")
         failed.append(doc["article"])

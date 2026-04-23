@@ -8,9 +8,9 @@ PERMUTATIONS = [
     {"collection": "chunks",         "model": "voyage-4-large"},
     {"collection": "chunks",         "model": "voyage-4"},
     {"collection": "chunks",         "model": "voyage-4-lite"},
-    {"collection": "chunks_v4",      "model": "voyage-4"},
-    {"collection": "chunks_v4",      "model": "voyage-4-lite"},
-    {"collection": "chunks_v4_lite", "model": "voyage-4-lite"},
+    # {"collection": "chunks_v4",      "model": "voyage-4"},
+    # {"collection": "chunks_v4",      "model": "voyage-4-lite"},
+    # {"collection": "chunks_v4_lite", "model": "voyage-4-lite"},
 ]
 
 def evaluate(entries):
@@ -28,14 +28,14 @@ def evaluate(entries):
     reciprocal_ranks_article = []
 
     for entry in entries:
-        exp_article_id = entry["expected_articleID"]
+        #exp_article_id = entry["expected_articleID"]
         exp_chunk_id   = entry["expected_chunkID"]
         results        = entry["results"]
 
         # --- chunk-level ---
         chunk_rank = None
         for r in results:
-            if r["articleID"] == exp_article_id and r["chunkID"] == exp_chunk_id:
+            if r["chunkID"] == exp_chunk_id:
                 chunk_rank = r["rank"]
                 break
 
@@ -44,17 +44,17 @@ def evaluate(entries):
         if chunk_rank and chunk_rank <= 5: hit_at_5_chunk += 1
         reciprocal_ranks_chunk.append(1 / chunk_rank if chunk_rank else 0)
 
-        # --- article-level ---
-        article_rank = None
-        for r in results:
-            if r["articleID"] == exp_article_id:
-                article_rank = r["rank"]
-                break
+        # # --- article-level ---
+        # article_rank = None
+        # for r in results:
+        #     if r["articleID"] == exp_article_id:
+        #         article_rank = r["rank"]
+        #         break
 
-        if article_rank == 1: hit_at_1_article += 1
-        if article_rank and article_rank <= 3: hit_at_3_article += 1
-        if article_rank and article_rank <= 5: hit_at_5_article += 1
-        reciprocal_ranks_article.append(1 / article_rank if article_rank else 0)
+        # if article_rank == 1: hit_at_1_article += 1
+        # if article_rank and article_rank <= 3: hit_at_3_article += 1
+        # if article_rank and article_rank <= 5: hit_at_5_article += 1
+        # reciprocal_ranks_article.append(1 / article_rank if article_rank else 0)
 
     return {
         "total_queries": total,
@@ -63,13 +63,13 @@ def evaluate(entries):
             "hit@3":  round(hit_at_3_chunk  / total, 3),
             "hit@5":  round(hit_at_5_chunk  / total, 3),
             "MRR":    round(sum(reciprocal_ranks_chunk) / total, 3),
-        },
-        "article_level": {
-            "hit@1":  round(hit_at_1_article  / total, 3),
-            "hit@3":  round(hit_at_3_article  / total, 3),
-            "hit@5":  round(hit_at_5_article  / total, 3),
-            "MRR":    round(sum(reciprocal_ranks_article) / total, 3),
-        }
+        }#,
+        # "article_level": {
+        #     "hit@1":  round(hit_at_1_article  / total, 3),
+        #     "hit@3":  round(hit_at_3_article  / total, 3),
+        #     "hit@5":  round(hit_at_5_article  / total, 3),
+        #     "MRR":    round(sum(reciprocal_ranks_article) / total, 3),
+        # }
     }
 
 # Group entries by permutation
@@ -94,7 +94,7 @@ for p in PERMUTATIONS:
         print(f"{label:<40} No data found")
         continue
 
-    for level in ["chunk_level", "article_level"]:
+    for level in ["chunk_level"]:
         m = metrics[level]
         level_label = "chunk" if level == "chunk_level" else "article"
         print(f"{label:<40} {level_label:<10} {m['hit@1']:>6.3f} {m['hit@3']:>6.3f} {m['hit@5']:>6.3f} {m['MRR']:>6.3f}")
@@ -104,7 +104,7 @@ for p in PERMUTATIONS:
 
 print(f"{'='*90}\n")
 
-with open("evaluation/report.json", "w", encoding="utf-8") as f:
+with open("evaluation/report3.json", "w", encoding="utf-8") as f:
     json.dump(report, f, ensure_ascii=False, indent=2)
 
 print("Full report saved to evaluation/report.json")

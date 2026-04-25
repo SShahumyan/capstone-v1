@@ -12,7 +12,7 @@ load_dotenv()
 
 vo     = voyageai.Client(api_key=os.getenv("VOYAGE_API_KEY"))
 client = MongoClient(os.getenv("MONGODB_URI"))
-collection = client["armenian_search"]["court_case"]
+collection = client["armenian_search"]["court_case_v4_lite"]
 
 # Clear existing data
 collection.delete_many({})
@@ -67,7 +67,7 @@ for i in tqdm(range(0, len(docs), BATCH_SIZE)):
     batch = docs[i:i + BATCH_SIZE]
     texts = [d["embed_text"] for d in batch]
 
-    result = vo.embed(texts, model="voyage-4-large", input_type="document")
+    result = vo.embed(texts, model="voyage-4-lite", input_type="document")
 
     for doc, vector in zip(batch, result.embeddings):
         to_insert.append({

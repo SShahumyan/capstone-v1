@@ -23,7 +23,9 @@ with open("evaluation/ground_truth_court.json", "r", encoding="utf-8") as f:
 
 all_results = []
 
+counter=0
 for gt in ground_truth:
+    
     for p in PERMUTATIONS:
         result = search(gt["question"], collection=p["collection"], model=p["model"])
         #all_results.append(result)
@@ -37,8 +39,12 @@ for gt in ground_truth:
             "results":            result["results"]
         })
         print(f"✓ query='{gt['question']}' | collection={p['collection']} | model={p['model']}")
+    
+    if(counter>75):
+        break
+    counter+=1
 
-with open("evaluation/raw_results_qg.json", "w", encoding="utf-8") as f:
+with open("evaluation/raw_results_qg_test.json", "w", encoding="utf-8") as f:
     json.dump(all_results, f, ensure_ascii=False, indent=2)
 
 print(f"\nDone — {len(all_results)} results saved to evaluation/raw_results_qg.json")

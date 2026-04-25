@@ -10,9 +10,14 @@ load_dotenv()
 client = genai.Client(api_key=os.getenv("GEMINI_API_KEY"))
 
 # Retrieve and encode the PDF byte
-filepath = pathlib.Path('data_qg/2_Gevorg Simonyan pastat.pdf')
+filepath = pathlib.Path('data_qg/lilia_harcaqnnutyun.pdf')
 
-prompt = "exctract the content of the pdf as text. "
+PROMPT = """Extract all Armenian text from this PDF.
+
+Rules:
+- Exctract content as it is, do not change the structure
+- Do not translate or summarize — extract exact Armenian text
+"""
 response = client.models.generate_content(
   model="gemini-3-flash-preview",
   contents=[
@@ -20,5 +25,10 @@ response = client.models.generate_content(
         data=filepath.read_bytes(),
         mime_type='application/pdf',
       ),
-      prompt])
-print(response.text)
+      PROMPT])
+#print(response.text)
+
+output_path = pathlib.Path("output.txt")
+
+with open(output_path, "w", encoding="utf-8") as f:
+    f.write(response.text)

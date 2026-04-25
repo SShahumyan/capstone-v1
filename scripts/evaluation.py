@@ -1,16 +1,16 @@
 import json
 from collections import defaultdict
 
-with open("evaluation/raw_results.json", "r", encoding="utf-8") as f:
+with open("evaluation/raw_results_qg_test.json", "r", encoding="utf-8") as f:
     raw_results = json.load(f)
 
 PERMUTATIONS = [
     {"collection": "chunks",         "model": "voyage-4-large"},
     {"collection": "chunks",         "model": "voyage-4"},
     {"collection": "chunks",         "model": "voyage-4-lite"},
-    # {"collection": "chunks_v4",      "model": "voyage-4"},
-    # {"collection": "chunks_v4",      "model": "voyage-4-lite"},
-    # {"collection": "chunks_v4_lite", "model": "voyage-4-lite"},
+    {"collection": "chunks_v4",      "model": "voyage-4"},
+    {"collection": "chunks_v4",      "model": "voyage-4-lite"},
+    {"collection": "chunks_v4_lite", "model": "voyage-4-lite"},
 ]
 
 def evaluate(entries):

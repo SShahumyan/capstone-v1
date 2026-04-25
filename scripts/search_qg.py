@@ -17,15 +17,15 @@ client = MongoClient(os.getenv("MONGODB_URI"))
 #collection = client["armenian_search"]["chunks"]
 
 COLLECTIONS = {
-    "chunks":    client["armenian_search"]["court_case"]#,
-    #"chunks_v4": client["armenian_search"]["chunks_v4"],
-    #"chunks_v4_lite": client["armenian_search"]["chunks_v4_lite"],
+    "chunks":    client["armenian_search"]["court_case"],
+    "chunks_v4": client["armenian_search"]["court_case_v4"],
+    "chunks_v4_lite": client["armenian_search"]["court_case_v4_lite"],
 }
 
 INDEX_NAMES = {
-    "chunks":    "vector_index_court"#,
-    #"chunks_v4": "vector_index_v4",
-    #"chunks_v4_lite": "vector_index_v4_lite",
+    "chunks":    "vector_index_court",
+    "chunks_v4": "vector_index_court_v4",
+    "chunks_v4_lite": "vector_index_court_v4_lite",
 }
 
 """
@@ -60,7 +60,7 @@ The 'search' method is later handeled by main.py which handeles post request
 
 def search(query: str, collection: str = "chunks", model: str = "voyage-4-large", k: int = 5) -> dict:
     query_embedding = vo.embed(
-        texts=[query],
+        texts=[query[:len(query)//2]],
         model=model,
         input_type="query"
     ).embeddings[0]

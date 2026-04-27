@@ -100,7 +100,8 @@ def search(query: str, collection: str = "chunks", model: str = "voyage-4-large"
         })
 
     return {
-        "query":           query,
+        #"query":           query,
+        "query":           query[:len(query)//2],
         "collection":      collection,
         "embedding_model": model,
         "results":         results

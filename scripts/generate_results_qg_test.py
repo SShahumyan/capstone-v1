@@ -23,7 +23,6 @@ with open("evaluation/ground_truth_court.json", "r", encoding="utf-8") as f:
 
 all_results = []
 
-counter=0
 for gt in ground_truth:
     
     for p in PERMUTATIONS:
@@ -40,9 +39,7 @@ for gt in ground_truth:
         })
         print(f"✓ query='{gt['question']}' | collection={p['collection']} | model={p['model']}")
     
-    if(counter>75):
-        break
-    counter+=1
+    
 
 with open("evaluation/raw_results_qg_test.json", "w", encoding="utf-8") as f:
     json.dump(all_results, f, ensure_ascii=False, indent=2)

@@ -14,7 +14,7 @@ load_dotenv()
 
 vo = voyageai.Client(api_key=os.getenv("VOYAGE_API_KEY"))
 client = MongoClient(os.getenv("MONGODB_URI"))
-collection = client["armenian_search"]["chunks_v4_lite"]
+collection = client["armenian_search"]["chunks"]
 
 # Clear previous data
 # collection.delete_many({})

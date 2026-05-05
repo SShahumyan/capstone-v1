@@ -6,7 +6,7 @@ import os
 load_dotenv()
 
 client = MongoClient(os.getenv("MONGODB_URI"))
-collection = client["armenian_search"]["chunks_v4_lite"]
+collection = client["armenian_search"]["chunks"]
 
 print("Fetching all documents...")
 docs = list(collection.find({}, {"_id": 1, "article": 1, "chunk_index": 1}))

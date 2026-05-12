@@ -9,8 +9,13 @@ import json
 from dotenv import load_dotenv
 from tqdm import tqdm
 import time
+from openai import OpenAI
 
 load_dotenv()
+
+# OpenAI client
+openai_client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
+
 
 vo = voyageai.Client(api_key=os.getenv("VOYAGE_API_KEY"))
 client = MongoClient(os.getenv("MONGODB_URI"))
@@ -33,6 +38,13 @@ for i in tqdm(range(0, len(chunks), BATCH_SIZE)):
     texts = [item["text"] for item in batch]
 
     result = vo.embed(texts, model="voyage-4-lite", input_type="document")
+
+    response_large = openai_client.embeddings.create(
+        model="text-embedding-3-large",  # or "text-embedding-3-small"
+        input=texts
+    )
+
+    embeddings = [item.embedding for item in response_large.data]
 
     for j, (item, vector) in enumerate(zip(batch, result.embeddings)):
         docs_to_insert.append({
